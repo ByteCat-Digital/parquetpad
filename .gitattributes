@@ -1,0 +1,15 @@
+# Set default behavior, in case users don't have core.autocrlf set.
+* text=auto
+
+# Explicitly declare text files you want to always be normalized and converted
+# to native line endings on checkout.
+*.cpp text
+*.h text
+*.cmake text
+*.txt text
+*.md text
+*.json text
+.git* text
+
+# Force LF line endings for all text files
+* text eol=lf

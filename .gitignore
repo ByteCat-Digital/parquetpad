@@ -1,0 +1,51 @@
+# CMake
+/build/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# vcpkg
+/vcpkg/
+/vcpkg_installed/
+vcpkg-manifest-install.log
+
+# Visual Studio
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.vs/
+.vs/
+
+# Qt
+*.pro.user
+*.qbs.user
+*.creator.user
+*.creator
+
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+*.app
+
+# Other
+*.o
+*.obj
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Qt Cache
+/.qt*/
