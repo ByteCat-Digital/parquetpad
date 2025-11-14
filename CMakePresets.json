@@ -26,8 +26,7 @@
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       },
-      "generator": "Ninja",
-      "architecture": "x64"
+      "generator": "Ninja"
     },
     {
       "name": "windows-msvc-debug",

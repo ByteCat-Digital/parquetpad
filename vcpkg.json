@@ -4,7 +4,10 @@
   "dependencies": [
     {
       "name": "arrow",
-      "features": ["parquet"]
+      "features": [
+        "parquet"
+      ]
     }
-   ]
+  ],
+  "builtin-baseline": "c76ea2f16f17f457721dfba9c0dae728fd32fd31"
 }
