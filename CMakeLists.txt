@@ -16,7 +16,7 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Arrow REQUIRED)
 find_package(Parquet REQUIRED)
 
-add_executable(parquetpad)
+add_executable(parquetpad WIN32)
 
 if(WIN32)
     target_sources(parquetpad PRIVATE src/parquetpad.rc)
@@ -71,7 +71,7 @@ install(TARGETS parquetpad
 # Use modern CMake to handle runtime dependencies.
 # This will find and install all required DLLs/shared libraries.
 install(RUNTIME_DEPENDENCY_SET app_dependencies
-    POST_EXCLUDE_REGEXES "^(api-ms-win-.*|lib[b-z].*\.so\.[0-9]+|libgcc_s\.so\.1|libstdc\+\+\.so\.6|libm\.so\.6|libc\.so\.6|libdl\.so\.2|libpthread\.so\.0|ld-linux-x86-64\.so\.2)$"
+    POST_EXCLUDE_REGEXES "^(api-ms-win-.*|lib[b-z].*\\.so\\.[0-9]+|libgcc_s\\.so\\.1|libstdc[+][+]\\.so\\.6|libm\\.so\\.6|libc\\.so\\.6|libdl\\.so\\.2|libpthread\\.so\\.0|ld-linux-x86-64\\.so\\.2)$"
     DESTINATION "${INSTALL_BIN_DIR}"
     COMPONENT Applications
 )
@@ -85,7 +85,8 @@ if(WIN32)
         install(CODE "
             message(STATUS \"Running windeployqt...\")
             execute_process(
-                COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" --dir \"${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}\" --plugindir plugins
+                      COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}/${PROJECT_NAME}.exe\" --dir \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}\" --plugindir plugin
+					  
                 RESULT_VARIABLE result
             )
             if(NOT result EQUAL 0)
