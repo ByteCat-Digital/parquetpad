@@ -19,7 +19,7 @@ AboutDialog::AboutDialog(QWidget *parent)
 
     // Icon
     QLabel *iconLabel = new QLabel(this);
-    QPixmap iconPixmap("/home/johan/projects/parquetpad/assets/icons/cat_dark_green_512x512.png");
+    QPixmap iconPixmap(":/icons/app_icon.png");
     iconLabel->setPixmap(iconPixmap.scaled(128, 128, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     topLayout->addWidget(iconLabel);
 

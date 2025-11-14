@@ -32,6 +32,7 @@ target_sources(parquetpad PRIVATE
     src/FileInfoDialog.cpp
     src/AboutDialog.h
     src/AboutDialog.cpp
+    src/resources.qrc
 )
 
 target_include_directories(parquetpad PRIVATE src)
@@ -121,9 +122,6 @@ elseif(APPLE)
         message(WARNING "macdeployqt not found. The macOS installation might be incomplete.")
     endif()
 endif()
-
-# Install assets
-install(DIRECTORY assets/icons DESTINATION "${INSTALL_BIN_DIR}")
 
 
 # --- CPack Configuration ---

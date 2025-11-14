@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    a.setWindowIcon(QIcon("/home/johan/projects/parquetpad/assets/icons/cat_dark_green_512x512.png"));
+    a.setWindowIcon(QIcon(":/icons/app_icon.png"));
     MainWindow w;
 
     // Handle command line argument for opening a file
