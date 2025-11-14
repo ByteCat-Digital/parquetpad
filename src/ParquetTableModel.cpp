@@ -211,6 +211,10 @@ std::shared_ptr<arrow::Schema> ParquetTableModel::getSchema() const {
     return m_schema;
 }
 
+std::shared_ptr<parquet::arrow::FileReader> ParquetTableModel::getFileReader() const {
+    return m_parquetFileReader;
+}
+
 bool ParquetTableModel::loadBatch(int batchIndex) const {
     if (!m_parquetFileReader || batchIndex < 0) {
         return false;

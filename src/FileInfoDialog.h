@@ -18,8 +18,8 @@ public:
     explicit FileInfoDialog(QWidget *parent = nullptr);
     ~FileInfoDialog() override;
 
-    void setFileInfo(const QString &filePath, int totalRows, int numRowGroups,
-                     std::shared_ptr<arrow::Schema> schema);
+    void setFileInfo(const QString &filePath, qint64 fileSize, qint64 uncompressedSize,
+                     int totalRows, int numRowGroups, std::shared_ptr<arrow::Schema> schema);
 
 private:
     QTextEdit *m_infoTextEdit;

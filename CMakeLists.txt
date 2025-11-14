@@ -18,11 +18,20 @@ find_package(Parquet REQUIRED)
 
 add_executable(parquetpad)
 
+if(WIN32)
+    target_sources(parquetpad PRIVATE src/parquetpad.rc)
+endif()
+
 target_sources(parquetpad PRIVATE
     src/main.cpp
+    src/MainWindow.h
     src/MainWindow.cpp
+    src/ParquetTableModel.h
     src/ParquetTableModel.cpp
+    src/FileInfoDialog.h
     src/FileInfoDialog.cpp
+    src/AboutDialog.h
+    src/AboutDialog.cpp
 )
 
 target_include_directories(parquetpad PRIVATE src)

@@ -13,3 +13,8 @@
 
 # Force LF line endings for all text files
 * text eol=lf
+
+# Mark image files as binary to prevent line ending conversions
+*.png binary
+*.ico binary
+

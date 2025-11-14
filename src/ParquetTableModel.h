@@ -39,6 +39,7 @@ public:
     int getTotalRows() const;
     int getNumRowGroups() const;
     std::shared_ptr<arrow::Schema> getSchema() const;
+    std::shared_ptr<parquet::arrow::FileReader> getFileReader() const;
 
 private:
     QString m_filePath;

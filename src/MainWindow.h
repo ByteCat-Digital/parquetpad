@@ -9,6 +9,7 @@
 
 #include "ParquetTableModel.h"
 #include "FileInfoDialog.h"
+#include "AboutDialog.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -23,6 +24,7 @@ private slots:
     void openFileAction();
     void showFileInfo();
     void showContextMenu(const QPoint &pos);
+    void showAboutDialog();
 
 private:
     void createMenus();
@@ -30,11 +32,14 @@ private:
     QTableView *m_tableView;
     ParquetTableModel *m_parquetTableModel;
     FileInfoDialog *m_fileInfoDialog;
+    AboutDialog *m_aboutDialog;
 
     QMenu *m_fileMenu;
+    QMenu *m_helpMenu;
     QAction *m_openAction;
     QAction *m_fileInfoAction;
     QAction *m_exitAction;
+    QAction *m_aboutAction;
 };
 
 #endif // MAINWINDOW_H
