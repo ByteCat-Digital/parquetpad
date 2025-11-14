@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.21)
 project(parquetpad VERSION 1.0.0 LANGUAGES CXX)
 
+# Configure version.h
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/version.h.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/version.h"
+    @ONLY
+)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -35,7 +42,7 @@ target_sources(parquetpad PRIVATE
     src/resources.qrc
 )
 
-target_include_directories(parquetpad PRIVATE src)
+target_include_directories(parquetpad PRIVATE src "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Detect which Arrow/Parquet variant is available (shared or static)
 if(TARGET Arrow::arrow_shared)
@@ -65,16 +72,17 @@ set(INSTALL_BIN_DIR ".")
 
 install(TARGETS parquetpad
     RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
-    BUNDLE DESTINATION "." COMPONENT Applications
+    BUNDLE DESTINATION "."
 )
 
-# Use modern CMake to handle runtime dependencies.
-# This will find and install all required DLLs/shared libraries.
-install(RUNTIME_DEPENDENCY_SET app_dependencies
-    POST_EXCLUDE_REGEXES "^(api-ms-win-.*|lib[b-z].*\\.so\\.[0-9]+|libgcc_s\\.so\\.1|libstdc[+][+]\\.so\\.6|libm\\.so\\.6|libc\\.so\\.6|libdl\\.so\\.2|libpthread\\.so\\.0|ld-linux-x86-64\\.so\\.2)$"
-    DESTINATION "${INSTALL_BIN_DIR}"
-    COMPONENT Applications
-)
+# Manually install Arrow and Parquet DLLs
+if(WIN32 AND TARGET Arrow::arrow_shared)
+    install(FILES
+        "$<TARGET_FILE:Arrow::arrow_shared>"
+        "$<TARGET_FILE:Parquet::parquet_shared>"
+        DESTINATION "${INSTALL_BIN_DIR}"
+    )
+endif()
 
 # Platform-specific deployment steps
 if(WIN32)
@@ -85,25 +93,20 @@ if(WIN32)
         install(CODE "
             message(STATUS \"Running windeployqt...\")
             execute_process(
-                      COMMAND \"${WINDEPLOYQT_EXECUTABLE}\" \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}/${PROJECT_NAME}.exe\" --dir \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}\" --plugindir plugin
-					  
+                COMMAND \"${WINDEPLOYQT_EXECUTABLE}\"
+                    --dir \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}\"
+                    --plugindir \"plugins\"
+                    \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}/${PROJECT_NAME}.exe\"
+                WORKING_DIRECTORY \"\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${INSTALL_BIN_DIR}\"
                 RESULT_VARIABLE result
             )
             if(NOT result EQUAL 0)
                 message(FATAL_ERROR \"windeployqt failed with exit code ${result}\")
             endif()
-        " COMPONENT Applications)
+        ")
     else()
         message(WARNING "windeployqt not found. The Windows installation might be incomplete.")
     endif()
-
-    # Install the icon for the NSIS installer
-    install(FILES "${CMAKE_SOURCE_DIR}/assets/icons/cat_windows_icon.ico"
-        DESTINATION "${INSTALL_BIN_DIR}"
-        RENAME "installer_icon.ico"
-        COMPONENT Applications
-    )
-
 elseif(APPLE)
     # On macOS, macdeployqt is used to create a proper .app bundle.
     find_program(MACDEPLOYQT_EXECUTABLE macdeployqt PATHS "${Qt6_INSTALL_DIR}/bin" NO_DEFAULT_PATH)
@@ -141,7 +144,7 @@ if(WIN32)
 
     # NSIS specific settings
     set(CPACK_NSIS_PACKAGE_NAME "${CPACK_PACKAGE_NAME} ${CPACK_PACKAGE_VERSION}")
-    set(CPACK_NSIS_INSTALLER_ICON_CODE "installer_icon.ico")
+    set(CPACK_NSIS_INSTALLER_ICON "${CMAKE_SOURCE_DIR}/assets/icons/cat_windows_icon.ico")
     set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/assets/icons/cat_windows_icon.ico")
     set(CPACK_NSIS_MUI_UNIICON "${CMAKE_SOURCE_DIR}/assets/icons/cat_windows_icon.ico")
     set(CPACK_NSIS_CREATE_ICONS_EXTRA "CreateShortCut \\\"$DESKTOP\\\\${CPACK_PACKAGE_NAME}.lnk\\\" \\\"$INSTDIR\\\\${INSTALL_BIN_DIR}\\\\parquetpad.exe\\\"")

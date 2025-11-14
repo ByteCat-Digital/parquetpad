@@ -2,6 +2,7 @@
 #define ABOUTDIALOG_H
 
 #include <QDialog>
+#include "version.h"
 
 class AboutDialog : public QDialog {
     Q_OBJECT

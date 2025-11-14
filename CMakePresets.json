@@ -34,7 +34,8 @@
       "inherits": "windows-msvc-base",
       "binaryDir": "${sourceDir}/build/windows-msvc-debug",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "X_VCPKG_APPLOCAL_DEPS_INSTALL":"ON"
       }
     },
     {
@@ -43,7 +44,8 @@
       "inherits": "windows-msvc-base",
       "binaryDir": "${sourceDir}/build/windows-msvc-release",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "X_VCPKG_APPLOCAL_DEPS_INSTALL":"ON"
       }
     },
     {

@@ -1,0 +1,3 @@
+#pragma once
+
+#define PARQUETPAD_VERSION "@PROJECT_VERSION@"

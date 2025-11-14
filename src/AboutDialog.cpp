@@ -26,6 +26,7 @@ AboutDialog::AboutDialog(QWidget *parent)
     // Text
     QVBoxLayout *textLayout = new QVBoxLayout();
     textLayout->addWidget(new QLabel("<b>ParquetPad</b>", this));
+    textLayout->addWidget(new QLabel(QString("Version %1").arg(PARQUETPAD_VERSION), this));
     textLayout->addWidget(new QLabel("Copyright (c) 2025 BiteCat Digital (Pty) Ltd", this));
     
     QLabel *websiteLabel = new QLabel("<a href=\"http://www.bytecat.co.za\">www.bytecat.co.za</a>", this);
@@ -35,6 +36,8 @@ AboutDialog::AboutDialog(QWidget *parent)
     QLabel *githubLabel = new QLabel("<a href=\"https://github.com/ByteCat-Digital\">github.com/ByteCat-Digital</a>", this);
     githubLabel->setOpenExternalLinks(true);
     textLayout->addWidget(githubLabel);
+
+    textLayout->addWidget(new QLabel("Built with the help of Google Gemini", this));
 
     textLayout->addStretch();
     topLayout->addLayout(textLayout);
