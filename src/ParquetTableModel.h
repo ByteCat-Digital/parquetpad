@@ -1,6 +1,7 @@
 #ifndef PARQUETTABLEMODEL_H
 #define PARQUETTABLEMODEL_H
 
+
 #include <QAbstractTableModel>
 #include <QVector>
 #include <QVariant>
@@ -10,6 +11,7 @@
 namespace arrow {
     class Table;
     class Schema;
+    class Array;
 }
 namespace parquet {
     namespace arrow {
@@ -55,6 +57,9 @@ private:
 
     // Helper to load a specific batch
     bool loadBatch(int batchIndex) const;
+
+    QString getColumnString(const std::shared_ptr<arrow::Array>& array, int64_t index) const;
+    QString getColumnLargeString(const std::shared_ptr<arrow::Array>& array, int64_t index) const;
 };
 
 #endif // PARQUETTABLEMODEL_H

@@ -6,11 +6,14 @@
 #include <arrow/io/api.h>
 #include <arrow/result.h>
 #include <parquet/arrow/reader.h>
+#include <arrow/array/array_binary.h>
 #include <parquet/file_reader.h>
+#include <string_view>
 
 #include <QDateTime>
 #include <QDebug>
 #include <QFile>
+#include <QtTypes>
 
 ParquetTableModel::ParquetTableModel(QObject *parent)
     : QAbstractTableModel(parent),
@@ -36,6 +39,32 @@ int ParquetTableModel::columnCount(const QModelIndex &parent) const {
         return 0;
     }
     return m_schema->num_fields();
+}
+
+QString ParquetTableModel::getColumnString(const std::shared_ptr<arrow::Array>& array, int64_t index) const  {
+
+    arrow::StringArray::offset_type length;
+    if (array->IsNull(index)) {
+        return "<NULL>";
+    }
+
+    auto str_array = std::static_pointer_cast<arrow::StringArray>(array);
+    const uint8_t *str = str_array->GetValue(index,&length);
+    return QString::fromUtf8(reinterpret_cast<const char *>(str), static_cast<qsizetype>(length));
+}
+
+QString ParquetTableModel::getColumnLargeString(const std::shared_ptr<arrow::Array>& array, int64_t index) const {
+
+    arrow::LargeStringArray::offset_type length;
+    if (array->IsNull(index)) {
+        return "<NULL>";
+
+
+    }
+
+    auto str_array = std::static_pointer_cast<arrow::LargeStringArray >(array);
+    const uint8_t *str = str_array->GetValue(index,&length);
+    return QString::fromUtf8(reinterpret_cast<const char *>(str), static_cast<qsizetype>(length));
 }
 
 QVariant ParquetTableModel::data(const QModelIndex &index, int role) const {
@@ -91,8 +120,9 @@ QVariant ParquetTableModel::data(const QModelIndex &index, int role) const {
         case arrow::Type::DOUBLE:
             return std::static_pointer_cast<arrow::DoubleArray>(column_array)->Value(rowInBatch);
         case arrow::Type::STRING:
+            return getColumnString(column_array, rowInBatch);
         case arrow::Type::LARGE_STRING:
-            return QString::fromUtf8(std::static_pointer_cast<arrow::StringArray>(column_array)->Value(rowInBatch));
+            return getColumnLargeString(column_array, rowInBatch);
         case arrow::Type::TIMESTAMP: {
             auto timestamp_array = std::static_pointer_cast<arrow::TimestampArray>(column_array);
             if (timestamp_array->IsNull(rowInBatch)) return QVariant();
