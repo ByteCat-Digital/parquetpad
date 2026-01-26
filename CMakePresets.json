@@ -12,7 +12,7 @@
       "cacheVariables": {
         "CMAKE_TOOLCHAIN_FILE": {
           "type": "FILEPATH",
-          "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+          "value": "${sourceDir}/build/${presetName}/conan_toolchain.cmake"
         },
         "CMAKE_POLICY_DEFAULT_CMP0074": "NEW"
       }
@@ -26,7 +26,7 @@
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
       },
-      "generator": "Ninja"
+      "generator": "Visual Studio 17 2022"
     },
     {
       "name": "windows-msvc-debug",
@@ -34,8 +34,7 @@
       "inherits": "windows-msvc-base",
       "binaryDir": "${sourceDir}/build/windows-msvc-debug",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "X_VCPKG_APPLOCAL_DEPS_INSTALL":"ON"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
@@ -44,8 +43,7 @@
       "inherits": "windows-msvc-base",
       "binaryDir": "${sourceDir}/build/windows-msvc-release",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "X_VCPKG_APPLOCAL_DEPS_INSTALL":"ON"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {

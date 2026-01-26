@@ -8,10 +8,10 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 
-# vcpkg
-/vcpkg/
-/vcpkg_installed/
-vcpkg-manifest-install.log
+# Conan
+conan*.log
+__pycache__/
+*.pyc
 
 # Visual Studio
 *.sln

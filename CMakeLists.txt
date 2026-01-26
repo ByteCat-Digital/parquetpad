@@ -20,8 +20,7 @@ if(DEFINED ENV{QT_DIR})
 endif()
 
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Arrow REQUIRED)
-find_package(Parquet REQUIRED)
+find_package(Arrow CONFIG REQUIRED)
 
 add_executable(parquetpad WIN32)
 
@@ -33,6 +32,10 @@ target_sources(parquetpad PRIVATE
     src/main.cpp
     src/MainWindow.h
     src/MainWindow.cpp
+    src/Query.h
+    src/IDataProvider.h
+    src/ArrowBackend.h
+    src/ArrowBackend.cpp
     src/ParquetTableModel.h
     src/ParquetTableModel.cpp
     src/FileInfoDialog.h
@@ -44,23 +47,10 @@ target_sources(parquetpad PRIVATE
 
 target_include_directories(parquetpad PRIVATE src "${CMAKE_CURRENT_BINARY_DIR}")
 
-# Detect which Arrow/Parquet variant is available (shared or static)
-if(TARGET Arrow::arrow_shared)
-    message(STATUS "Found shared Arrow/Parquet libraries.")
-    set(ARROW_TARGET Arrow::arrow_shared)
-    set(PARQUET_TARGET Parquet::parquet_shared)
-elseif(TARGET Arrow::arrow_static)
-    message(STATUS "Found static Arrow/Parquet libraries.")
-    set(ARROW_TARGET Arrow::arrow_static)
-    set(PARQUET_TARGET Parquet::parquet_static)
-else()
-    message(FATAL_ERROR "Could not find Arrow/Parquet library targets (shared or static). Please check your vcpkg installation of Arrow with the Parquet feature.")
-endif()
-
 target_link_libraries(parquetpad PRIVATE
     Qt6::Widgets
-    ${ARROW_TARGET}
-    ${PARQUET_TARGET}
+    Arrow::arrow_shared
+    Parquet::parquet_shared
 )
 
 # --- Installation ---
@@ -77,11 +67,9 @@ install(TARGETS parquetpad
 
 # Manually install Arrow and Parquet DLLs
 if(WIN32 AND TARGET Arrow::arrow_shared)
-    install(FILES
-        "$<TARGET_FILE:Arrow::arrow_shared>"
-        "$<TARGET_FILE:Parquet::parquet_shared>"
-        DESTINATION "${INSTALL_BIN_DIR}"
-    )
+    # With Conan, the shared libraries are automatically copied to the build's bin directory
+    # We just need to ensure they are included in the installation
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/bin/" DESTINATION "${INSTALL_BIN_DIR}" FILES_MATCHING PATTERN "*.dll")
 endif()
 
 # Platform-specific deployment steps

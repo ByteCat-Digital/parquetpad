@@ -1,7 +1,7 @@
 #ifndef PARQUETTABLEMODEL_H
 #define PARQUETTABLEMODEL_H
 
-
+#include "IDataProvider.h"
 #include <QAbstractTableModel>
 #include <QVector>
 #include <QVariant>
@@ -12,11 +12,6 @@ namespace arrow {
     class Table;
     class Schema;
     class Array;
-}
-namespace parquet {
-    namespace arrow {
-        class FileReader;
-    }
 }
 
 class ParquetTableModel : public QAbstractTableModel {
@@ -39,24 +34,20 @@ public:
     // Getters for file info
     QString filePath() const;
     int getTotalRows() const;
-    int getNumRowGroups() const;
+    int getNumRowGroups() const; // This might be deprecated or changed
     std::shared_ptr<arrow::Schema> getSchema() const;
-    std::shared_ptr<parquet::arrow::FileReader> getFileReader() const;
 
 private:
     QString m_filePath;
-    std::shared_ptr<parquet::arrow::FileReader> m_parquetFileReader;
-    std::shared_ptr<arrow::Schema> m_schema;
-    int m_totalRows;
-    int m_numRowGroups;
+    std::unique_ptr<IDataProvider> m_dataProvider;
 
-    // Virtual scrolling / paging
-    static constexpr int BATCH_SIZE = 10000; // Load 10,000 rows at a time
-    mutable int m_currentBatchIndex; // Which batch is currently loaded (0-based)
-    mutable std::shared_ptr<arrow::Table> m_currentBatch; // The currently loaded batch of data
+    // Caching
+    static constexpr int PAGE_SIZE = 10000;
+    mutable int m_currentPageIndex;
+    mutable std::shared_ptr<arrow::Table> m_currentPage;
 
-    // Helper to load a specific batch
-    bool loadBatch(int batchIndex) const;
+    // Helper to load a specific page
+    bool loadPage(int pageIndex) const;
 
     QString getColumnString(const std::shared_ptr<arrow::Array>& array, int64_t index) const;
     QString getColumnLargeString(const std::shared_ptr<arrow::Array>& array, int64_t index) const;

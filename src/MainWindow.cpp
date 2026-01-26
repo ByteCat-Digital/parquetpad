@@ -81,6 +81,7 @@ void MainWindow::openFile(const QString &filePath) {
 }
 
 void MainWindow::showFileInfo() {
+    /*
     if (m_parquetTableModel->getTotalRows() > 0) {
         QFileInfo fileInfo(m_parquetTableModel->filePath());
         qint64 fileSize = fileInfo.size();
@@ -104,6 +105,8 @@ void MainWindow::showFileInfo() {
     } else {
         QMessageBox::information(this, "Information", "No Parquet file loaded.");
     }
+    */
+   QMessageBox::information(this, "Information", "File info is temporarily disabled.");
 }
 
 void MainWindow::showContextMenu(const QPoint &pos) {
